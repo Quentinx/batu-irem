@@ -12,6 +12,12 @@ const USERS_FILE = path.join(__dirname, 'users.json');
 const PHOTOS_FILE = path.join(__dirname, 'photos.json');
 const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
 
+// ✅ Ensure UPLOAD_DIR exists
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  console.log(`📁 Created missing uploads folder at: ${UPLOAD_DIR}`);
+}
+
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
