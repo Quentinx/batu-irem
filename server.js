@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const USERS_FILE = path.join(__dirname, 'users.json');
 const PHOTOS_FILE = path.join(__dirname, 'photos.json');
@@ -27,6 +27,16 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage });
+
+// ===== Root route =====
+app.get('/', (req, res) => {
+  const indexPath = path.join(__dirname, 'public', 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.send('Hoş geldiniz 👋 Uygulama çalışıyor.');
+  }
+});
 
 // ======== Helpers ==========
 function readUsers() {
@@ -49,7 +59,7 @@ function savePhotos(photos) {
   fs.writeFileSync(PHOTOS_FILE, JSON.stringify(photos, null, 2));
 }
 
-// ======== Auth ==========
+// ======== Auth (only for Admin) ==========
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   console.log(`📧 Login attempt: ${email}`);
@@ -70,14 +80,9 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// ======== Upload with Multer ==========
+// ======== Upload with Multer (Public, No Auth) ==========
 app.post('/upload-stream', upload.array('files'), (req, res) => {
-  const ownerEmail = req.body.email;
-  console.log(`✅ Upload Email: ${ownerEmail}`);
-
-  if (!ownerEmail) {
-    return res.status(400).send('Email bilgisi gerekli.');
-  }
+  console.log('✅ Public Upload');
 
   if (!req.files || req.files.length === 0) {
     return res.status(400).send('Dosya yüklenmedi.');
@@ -88,7 +93,7 @@ app.post('/upload-stream', upload.array('files'), (req, res) => {
   req.files.forEach(file => {
     photos.push({
       filename: file.filename,
-      owner: ownerEmail,
+      owner: 'anonim',
       likes: 0
     });
     console.log(`✅ Saved file: ${file.filename}`);

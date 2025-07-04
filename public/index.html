@@ -6,206 +6,260 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
-      --primary-color: #ef6c57;
-      --secondary-color: #f5a623;
-      --danger-color: #e74c3c;
-      --bg-color: #f9f9f9;
-      --text-color: #333;
-      --border-color: #ddd;
+      --primary: #ef6c57;
+      --secondary: #f5a623;
+      --danger: #e74c3c;
+      --gray-bg: #f9f9f9;
+      --dark: #333;
+      --light: #fff;
     }
-    * {
-      box-sizing: border-box;
-    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      line-height: 1.5;
+      background-color: var(--gray-bg);
+      color: var(--dark);
     }
-    header {
-      text-align: center;
-      padding: 20px;
-      background-color: white;
-      border-bottom: 1px solid var(--border-color);
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--light);
+      padding: 15px 20px;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    header h1 {
-      color: var(--primary-color);
-      margin-bottom: 5px;
-      font-size: 2em;
+
+    nav h1 {
+      color: var(--primary);
+      font-size: 1.5em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    header p {
-      color: #666;
-      font-size: 1em;
+
+    #adminControls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
     }
-    section {
-      max-width: 800px;
+
+    #adminControls input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+
+    #adminControls button {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      background: var(--primary);
+      color: var(--light);
+      cursor: pointer;
+      transition: background 0.2s;
+      font-weight: bold;
+    }
+
+    #adminControls button:hover {
+      background: #e35a47;
+    }
+
+    #logoutBtn {
+      background: #555;
+    }
+
+    #logoutBtn:hover {
+      background: #333;
+    }
+
+    main {
+      max-width: 1100px;
       margin: 20px auto;
       padding: 0 15px;
     }
-    form {
-      background: white;
+
+    section {
+      background: var(--light);
       padding: 20px;
       margin-bottom: 20px;
       border-radius: 10px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s;
     }
-    form:hover {
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+
+    section:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
-    input, button, label {
-      display: block;
+
+    section h3 {
+      margin-bottom: 15px;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    input[type="file"] {
       width: 100%;
-      font-size: 1em;
-      margin-top: 10px;
-    }
-    input {
-      padding: 12px;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
       border-radius: 5px;
-      border: 1px solid #ccc;
     }
-    input:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 5px rgba(239,108,87,0.3);
-    }
+
     button {
-      padding: 12px;
+      width: 100%;
+      padding: 10px;
       border: none;
       border-radius: 5px;
-      background-color: var(--primary-color);
-      color: white;
+      background: var(--primary);
+      color: var(--light);
+      cursor: pointer;
+      transition: background 0.2s;
       font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.1s;
     }
+
     button:hover {
-      background-color: #e35a47;
-      transform: translateY(-2px);
+      background: #e35a47;
     }
-    #logoutBtn {
-      background-color: #555;
-    }
-    #logoutBtn:hover {
-      background-color: #333;
-    }
-    #photoInput {
-      border: 2px dashed #ccc;
-      padding: 12px;
-      background: #fff;
-      cursor: pointer;
-    }
-    #photoInput:hover {
-      border-color: var(--primary-color);
-    }
+
     #gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
-      padding: 10px 0;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+      margin-top: 20px;
     }
+
     .photo-card {
-      background: white;
-      border: 1px solid var(--border-color);
+      background: var(--light);
       border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      padding: 10px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      cursor: pointer;
+      height: 300px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      transition: transform 0.2s;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
+
     .photo-card:hover {
-      transform: scale(1.02);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    .photo-card img,
-    .photo-card video {
-      max-width: 100%;
-      border-radius: 5px;
+
+    .photo-card.selected {
+      border: 3px solid var(--primary);
+      box-shadow: 0 0 12px rgba(239,108,87,0.3);
     }
-    .photo-card video {
-      max-height: 240px;
-    }
-    .photo-actions {
-      margin-top: 10px;
+
+    .media-wrapper {
+      flex: 1;
+      overflow: hidden;
       display: flex;
-      gap: 10px;
+      align-items: center;
+      justify-content: center;
+      background-color: #fefefe;
+    }
+
+    .media-wrapper img,
+    .media-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0;
+      pointer-events: none;
+    }
+
+    .photo-actions {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px;
+      background: #fafafa;
+      border-top: 1px solid #eee;
+    }
+
+    .btn-like, .btn-delete {
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 0.9em;
+      cursor: pointer;
+      border: none;
+      font-weight: bold;
+    }
+
+    .btn-like {
+      background: var(--secondary);
+      color: var(--light);
+    }
+
+    .btn-like:hover {
+      background: #e29a1c;
+    }
+
+    .btn-delete {
+      background: var(--danger);
+      color: var(--light);
+    }
+
+    .btn-delete:hover {
+      background: #c0392b;
+    }
+
+    #downloadSection {
+      text-align: center;
+      margin-top: 20px;
+      display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      gap: 12px;
     }
-    .btn-like, .btn-delete {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 0.95em;
-      font-weight: bold;
-      transition: transform 0.1s;
-    }
-    .btn-like {
-      background-color: var(--secondary-color);
-      color: white;
-    }
-    .btn-like:hover {
-      background-color: #e29a1c;
-      transform: scale(1.05);
-    }
-    .btn-delete {
-      background-color: var(--danger-color);
-      color: white;
-    }
-    .btn-delete:hover {
-      background-color: #c0392b;
-      transform: scale(1.05);
-    }
-    .likes-count, .owner-info {
-      font-size: 0.9em;
-      color: #555;
-      margin-top: 5px;
-      text-align: center;
-    }
-    footer {
-      text-align: center;
-      padding: 15px;
-      font-size: 0.9em;
-      color: #aaa;
+
+    #downloadSection button {
+      max-width: 240px;
+      flex: 1 1 200px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Batuhan & İrem Ortak Fotoğraf ve Video Galerisi</h1>
-    <p>Fotoğraf ve videolarınızı yükleyin, paylaşın ve beğeni alın ❤️</p>
-  </header>
+  <nav>
+    <h1>📸 Batuhan & İrem Galeri</h1>
+    <div id="adminControls">
+      <form id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Admin Email" required>
+        <input type="password" id="loginPassword" placeholder="Şifre" required>
+        <button type="submit">Giriş Yap</button>
+      </form>
+      <button id="logoutBtn" style="display:none;">Çıkış Yap</button>
+    </div>
+  </nav>
 
-  <section id="authSection">
-    <form id="loginForm">
-      <h3>Giriş Yap</h3>
-      <input type="email" id="loginEmail" placeholder="Email" required>
-      <input type="password" id="loginPassword" placeholder="Şifre" required>
-      <button type="submit">Giriş Yap</button>
-    </form>
-  </section>
+  <main>
+    <section id="uploadForm">
+      <h3>📤 Fotoğraf / Video Yükle</h3>
+      <form id="formUpload" enctype="multipart/form-data">
+        <input type="file" id="photoInput" name="files" accept="image/*,video/*" multiple required>
+        <button type="submit">Yükle</button>
+      </form>
+    </section>
 
-  <section id="userSection" style="display:none;">
-    <p id="welcome"></p>
-    <form id="uploadForm" enctype="multipart/form-data">
-      <label for="photoInput">Fotoğraf veya Video Seçin:</label>
-      <input type="file" id="photoInput" name="files" accept="image/*,video/*" multiple required>
-      <button type="submit">Fotoğraf / Video Yükle</button>
-    </form>
-    <button id="logoutBtn">Çıkış Yap</button>
-  </section>
+    <section id="downloadSection">
+      <button id="downloadSelectedBtn">📥 Seçilenleri İndir (ZIP)</button>
+      <button id="deleteSelectedBtn" style="background: #e74c3c; display:none;">🗑️ Seçilenleri Sil</button>
+    </section>
 
-  <section id="gallerySection">
     <div id="gallery"></div>
-  </section>
+  </main>
 
-  <footer>
-    &copy; 2025 Batuhan & İrem Galeri. Tüm hakları saklıdır.
-  </footer>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script>
     let currentUser = null;
 
@@ -215,12 +269,26 @@
     }
 
     function loadUser() {
-      const userData = localStorage.getItem('user');
-      if (userData) {
-        currentUser = JSON.parse(userData);
-        document.getElementById('authSection').style.display = 'none';
-        document.getElementById('userSection').style.display = 'block';
-        document.getElementById('welcome').textContent = `Hoşgeldin, ${currentUser.email} (${currentUser.role})`;
+      const data = localStorage.getItem('user');
+      document.getElementById('downloadSection').style.display = 'flex';
+      document.getElementById('downloadSelectedBtn').style.display = 'inline-block';
+
+      if (data) {
+        currentUser = JSON.parse(data);
+        document.getElementById('logoutBtn').style.display = 'inline-block';
+        document.getElementById('loginForm').style.display = 'none';
+
+        if (currentUser.role === 'admin') {
+          document.getElementById('deleteSelectedBtn').style.display = 'inline-block';
+        } else {
+          document.getElementById('deleteSelectedBtn').style.display = 'none';
+        }
+
+      } else {
+        currentUser = null;
+        document.getElementById('logoutBtn').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'flex';
+        document.getElementById('deleteSelectedBtn').style.display = 'none';
       }
     }
 
@@ -238,7 +306,7 @@
         saveUser(data);
         location.reload();
       } else {
-        alert('Giriş başarısız. Email veya şifre hatalı.');
+        alert('Admin girişi başarısız.');
       }
     });
 
@@ -247,24 +315,15 @@
       location.reload();
     });
 
-    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+    document.getElementById('formUpload').addEventListener('submit', async (e) => {
       e.preventDefault();
-      if (!currentUser) return alert('Önce giriş yapmalısın.');
-
       const formData = new FormData();
-      formData.append('email', currentUser.email);
-
       const files = document.getElementById('photoInput').files;
       for (let i = 0; i < files.length; i++) {
         formData.append('files', files[i]);
       }
-
-      await fetch('/upload-stream', {
-        method: 'POST',
-        body: formData
-      });
-
-      document.getElementById('uploadForm').reset();
+      await fetch('/upload-stream', { method: 'POST', body: formData });
+      document.getElementById('formUpload').reset();
       loadGallery();
     });
 
@@ -273,54 +332,50 @@
       const photos = await res.json();
       const gallery = document.getElementById('gallery');
       gallery.innerHTML = '';
-
-      if (!photos.length) {
-        gallery.innerHTML = '<p style="text-align:center; color:#777;">Henüz yüklenmiş bir fotoğraf veya video yok.</p>';
-        return;
-      }
-
       photos.forEach(photo => {
         const card = document.createElement('div');
         card.className = 'photo-card';
+        card.dataset.filename = photo.filename;
 
-        let mediaElement;
+        card.addEventListener('click', () => {
+          card.classList.toggle('selected');
+        });
+
+        const mediaWrapper = document.createElement('div');
+        mediaWrapper.className = 'media-wrapper';
+
+        let media;
         if (/\.(mp4|mov|webm)$/i.test(photo.filename)) {
-          mediaElement = document.createElement('video');
-          mediaElement.src = 'uploads/' + photo.filename;
-          mediaElement.controls = true;
+          media = document.createElement('video');
+          media.src = 'uploads/' + photo.filename;
+          media.controls = true;
         } else {
-          mediaElement = document.createElement('img');
-          mediaElement.src = 'uploads/' + photo.filename;
-          mediaElement.alt = 'Yüklenen görsel';
+          media = document.createElement('img');
+          media.src = 'uploads/' + photo.filename;
         }
-
-        const owner = document.createElement('div');
-        owner.className = 'owner-info';
-        owner.textContent = `Yükleyen: ${photo.owner}`;
-
-        const likesCount = document.createElement('div');
-        likesCount.className = 'likes-count';
-        likesCount.textContent = `❤️ ${photo.likes} Beğeni`;
+        mediaWrapper.appendChild(media);
+        card.appendChild(mediaWrapper);
 
         const actions = document.createElement('div');
         actions.className = 'photo-actions';
 
         const likeBtn = document.createElement('button');
         likeBtn.className = 'btn-like';
-        likeBtn.textContent = '❤️ Beğen';
-        likeBtn.addEventListener('click', async () => {
+        likeBtn.textContent = `❤️ ${photo.likes}`;
+        likeBtn.addEventListener('click', async (event) => {
+          event.stopPropagation();
           const res = await fetch('/like/' + photo.filename, { method: 'POST' });
           const data = await res.json();
-          if (data.success) likesCount.textContent = `❤️ ${data.likes} Beğeni`;
+          if (data.success) likeBtn.textContent = `❤️ ${data.likes}`;
         });
-
         actions.appendChild(likeBtn);
 
         if (currentUser && currentUser.role === 'admin') {
           const deleteBtn = document.createElement('button');
           deleteBtn.className = 'btn-delete';
           deleteBtn.textContent = '🗑️ Sil';
-          deleteBtn.addEventListener('click', async () => {
+          deleteBtn.addEventListener('click', async (event) => {
+            event.stopPropagation();
             if (confirm('Silmek istediğine emin misin?')) {
               await fetch(`/delete/${photo.filename}?email=${currentUser.email}&role=${currentUser.role}`, { method: 'DELETE' });
               loadGallery();
@@ -329,13 +384,35 @@
           actions.appendChild(deleteBtn);
         }
 
-        card.appendChild(mediaElement);
-        card.appendChild(owner);
-        card.appendChild(likesCount);
         card.appendChild(actions);
         gallery.appendChild(card);
       });
     }
+
+    document.getElementById('downloadSelectedBtn').addEventListener('click', async () => {
+      const selected = document.querySelectorAll('.photo-card.selected');
+      if (selected.length === 0) return alert('Lütfen önce medya seçin.');
+      const zip = new JSZip();
+      for (const card of selected) {
+        const media = card.querySelector('img,video');
+        const url = media.src;
+        const blob = await fetch(url).then(r => r.blob());
+        zip.file(url.split('/').pop(), blob);
+      }
+      const content = await zip.generateAsync({ type: 'blob' });
+      saveAs(content, 'secilen-medya.zip');
+    });
+
+    document.getElementById('deleteSelectedBtn').addEventListener('click', async () => {
+      const selected = document.querySelectorAll('.photo-card.selected');
+      if (selected.length === 0) return alert('Lütfen önce medya seçin.');
+      if (!confirm('Seçilen tüm medya silinsin mi?')) return;
+      for (const card of selected) {
+        const filename = card.dataset.filename;
+        await fetch(`/delete/${filename}?email=${currentUser.email}&role=${currentUser.role}`, { method: 'DELETE' });
+      }
+      loadGallery();
+    });
 
     loadUser();
     loadGallery();
