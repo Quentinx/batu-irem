@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Batuhan & İrem Ortak Galeri</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary-color: #ef6c57;
+      --secondary-color: #f5a623;
+      --danger-color: #e74c3c;
+      --bg-color: #f9f9f9;
+      --text-color: #333;
+      --border-color: #ddd;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+    }
+    header {
+      text-align: center;
+      padding: 20px;
+      background-color: white;
+      border-bottom: 1px solid var(--border-color);
+    }
+    header h1 {
+      color: var(--primary-color);
+      margin-bottom: 5px;
+      font-size: 2em;
+    }
+    header p {
+      color: #666;
+      font-size: 1em;
+    }
+    section {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+    form:hover {
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+    input, button, label {
+      display: block;
+      width: 100%;
+      font-size: 1em;
+      margin-top: 10px;
+    }
+    input {
+      padding: 12px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 5px rgba(239,108,87,0.3);
+    }
+    button {
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    button:hover {
+      background-color: #e35a47;
+      transform: translateY(-2px);
+    }
+    #logoutBtn {
+      background-color: #555;
+    }
+    #logoutBtn:hover {
+      background-color: #333;
+    }
+    #photoInput {
+      border: 2px dashed #ccc;
+      padding: 12px;
+      background: #fff;
+      cursor: pointer;
+    }
+    #photoInput:hover {
+      border-color: var(--primary-color);
+    }
+    #gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 10px 0;
+    }
+    .photo-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.2s;
+    }
+    .photo-card:hover {
+      transform: scale(1.02);
+    }
+    .photo-card img,
+    .photo-card video {
+      max-width: 100%;
+      border-radius: 5px;
+    }
+    .photo-card video {
+      max-height: 240px;
+    }
+    .photo-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn-like, .btn-delete {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.95em;
+      font-weight: bold;
+      transition: transform 0.1s;
+    }
+    .btn-like {
+      background-color: var(--secondary-color);
+      color: white;
+    }
+    .btn-like:hover {
+      background-color: #e29a1c;
+      transform: scale(1.05);
+    }
+    .btn-delete {
+      background-color: var(--danger-color);
+      color: white;
+    }
+    .btn-delete:hover {
+      background-color: #c0392b;
+      transform: scale(1.05);
+    }
+    .likes-count, .owner-info {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 5px;
+      text-align: center;
+    }
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 0.9em;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Batuhan & İrem Ortak Fotoğraf ve Video Galerisi</h1>
+    <p>Fotoğraf ve videolarınızı yükleyin, paylaşın ve beğeni alın ❤️</p>
+  </header>
+
+  <section id="authSection">
+    <form id="loginForm">
+      <h3>Giriş Yap</h3>
+      <input type="email" id="loginEmail" placeholder="Email" required>
+      <input type="password" id="loginPassword" placeholder="Şifre" required>
+      <button type="submit">Giriş Yap</button>
+    </form>
+  </section>
+
+  <section id="userSection" style="display:none;">
+    <p id="welcome"></p>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <label for="photoInput">Fotoğraf veya Video Seçin:</label>
+      <input type="file" id="photoInput" name="files" accept="image/*,video/*" multiple required>
+      <button type="submit">Fotoğraf / Video Yükle</button>
+    </form>
+    <button id="logoutBtn">Çıkış Yap</button>
+  </section>
+
+  <section id="gallerySection">
+    <div id="gallery"></div>
+  </section>
+
+  <footer>
+    &copy; 2025 Batuhan & İrem Galeri. Tüm hakları saklıdır.
+  </footer>
+
+  <script>
+    let currentUser = null;
+
+    function saveUser(data) {
+      localStorage.setItem('user', JSON.stringify(data));
+      currentUser = data;
+    }
+
+    function loadUser() {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        currentUser = JSON.parse(userData);
+        document.getElementById('authSection').style.display = 'none';
+        document.getElementById('userSection').style.display = 'block';
+        document.getElementById('welcome').textContent = `Hoşgeldin, ${currentUser.email} (${currentUser.role})`;
+      }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        saveUser(data);
+        location.reload();
+      } else {
+        alert('Giriş başarısız. Email veya şifre hatalı.');
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('user');
+      location.reload();
+    });
+
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) return alert('Önce giriş yapmalısın.');
+
+      const formData = new FormData();
+      formData.append('email', currentUser.email);
+
+      const files = document.getElementById('photoInput').files;
+      for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+      }
+
+      await fetch('/upload-stream', {
+        method: 'POST',
+        body: formData
+      });
+
+      document.getElementById('uploadForm').reset();
+      loadGallery();
+    });
+
+    async function loadGallery() {
+      const res = await fetch('/gallery');
+      const photos = await res.json();
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = '';
+
+      if (!photos.length) {
+        gallery.innerHTML = '<p style="text-align:center; color:#777;">Henüz yüklenmiş bir fotoğraf veya video yok.</p>';
+        return;
+      }
+
+      photos.forEach(photo => {
+        const card = document.createElement('div');
+        card.className = 'photo-card';
+
+        let mediaElement;
+        if (/\.(mp4|mov|webm)$/i.test(photo.filename)) {
+          mediaElement = document.createElement('video');
+          mediaElement.src = 'uploads/' + photo.filename;
+          mediaElement.controls = true;
+        } else {
+          mediaElement = document.createElement('img');
+          mediaElement.src = 'uploads/' + photo.filename;
+          mediaElement.alt = 'Yüklenen görsel';
+        }
+
+        const owner = document.createElement('div');
+        owner.className = 'owner-info';
+        owner.textContent = `Yükleyen: ${photo.owner}`;
+
+        const likesCount = document.createElement('div');
+        likesCount.className = 'likes-count';
+        likesCount.textContent = `❤️ ${photo.likes} Beğeni`;
+
+        const actions = document.createElement('div');
+        actions.className = 'photo-actions';
+
+        const likeBtn = document.createElement('button');
+        likeBtn.className = 'btn-like';
+        likeBtn.textContent = '❤️ Beğen';
+        likeBtn.addEventListener('click', async () => {
+          const res = await fetch('/like/' + photo.filename, { method: 'POST' });
+          const data = await res.json();
+          if (data.success) likesCount.textContent = `❤️ ${data.likes} Beğeni`;
+        });
+
+        actions.appendChild(likeBtn);
+
+        if (currentUser && currentUser.role === 'admin') {
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'btn-delete';
+          deleteBtn.textContent = '🗑️ Sil';
+          deleteBtn.addEventListener('click', async () => {
+            if (confirm('Silmek istediğine emin misin?')) {
+              await fetch(`/delete/${photo.filename}?email=${currentUser.email}&role=${currentUser.role}`, { method: 'DELETE' });
+              loadGallery();
+            }
+          });
+          actions.appendChild(deleteBtn);
+        }
+
+        card.appendChild(mediaElement);
+        card.appendChild(owner);
+        card.appendChild(likesCount);
+        card.appendChild(actions);
+        gallery.appendChild(card);
+      });
+    }
+
+    loadUser();
+    loadGallery();
+  </script>
+</body>
+</html>
