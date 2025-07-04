@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Batuhan & İrem Ortak Galeri</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
       --primary: #ef6c57;
@@ -14,12 +14,17 @@
       --light: #fff;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: Arial, sans-serif;
       background-color: var(--gray-bg);
       color: var(--dark);
+      line-height: 1.5;
     }
 
     nav {
@@ -27,7 +32,7 @@
       justify-content: space-between;
       align-items: center;
       background: var(--light);
-      padding: 15px 20px;
+      padding: 12px 16px;
       border-bottom: 1px solid #ddd;
       position: sticky;
       top: 0;
@@ -37,28 +42,29 @@
 
     nav h1 {
       color: var(--primary);
-      font-size: 1.5em;
+      font-size: 1.3em;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     #adminControls {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
     #adminControls input {
-      padding: 8px;
+      padding: 6px 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      font-size: 0.95em;
+      font-size: 0.9em;
+      width: 120px;
     }
 
     #adminControls button {
-      padding: 8px 12px;
+      padding: 6px 10px;
       border: none;
       border-radius: 4px;
       background: var(--primary);
@@ -66,6 +72,7 @@
       cursor: pointer;
       transition: background 0.2s;
       font-weight: bold;
+      font-size: 0.9em;
     }
 
     #adminControls button:hover {
@@ -81,28 +88,24 @@
     }
 
     main {
-      max-width: 1100px;
+      max-width: 900px;
       margin: 20px auto;
-      padding: 0 15px;
+      padding: 0 12px;
     }
 
     section {
       background: var(--light);
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-      transition: box-shadow 0.2s;
-    }
-
-    section:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
     }
 
     section h3 {
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       color: var(--primary);
       text-align: center;
+      font-size: 1.2em;
     }
 
     input[type="file"] {
@@ -111,6 +114,7 @@
       margin-bottom: 10px;
       border: 1px solid #ddd;
       border-radius: 5px;
+      font-size: 1em;
     }
 
     button {
@@ -123,40 +127,54 @@
       cursor: pointer;
       transition: background 0.2s;
       font-weight: bold;
+      font-size: 1em;
     }
 
     button:hover {
       background: #e35a47;
     }
 
+    #downloadSection {
+      text-align: center;
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    #downloadSection button {
+      max-width: 200px;
+      flex: 1 1 140px;
+    }
+
     #gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 14px;
       margin-top: 20px;
     }
 
     .photo-card {
       background: var(--light);
-      border-radius: 10px;
+      border-radius: 8px;
       overflow: hidden;
       position: relative;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       cursor: pointer;
-      height: 300px;
       display: flex;
       flex-direction: column;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.15s, box-shadow 0.15s;
     }
 
     .photo-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: scale(1.02);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
     }
 
     .photo-card.selected {
-      border: 3px solid var(--primary);
-      box-shadow: 0 0 12px rgba(239,108,87,0.3);
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 8px rgba(239,108,87,0.3);
     }
 
     .media-wrapper {
@@ -173,7 +191,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 0;
       pointer-events: none;
     }
 
@@ -181,15 +198,15 @@
       display: flex;
       justify-content: center;
       gap: 6px;
-      padding: 10px;
+      padding: 8px;
       background: #fafafa;
       border-top: 1px solid #eee;
     }
 
     .btn-like, .btn-delete {
-      padding: 6px 12px;
-      border-radius: 5px;
-      font-size: 0.9em;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.85em;
       cursor: pointer;
       border: none;
       font-weight: bold;
@@ -213,18 +230,26 @@
       background: #c0392b;
     }
 
-    #downloadSection {
-      text-align: center;
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-    }
+    @media (max-width: 500px) {
+      nav h1 {
+        font-size: 1.1em;
+      }
 
-    #downloadSection button {
-      max-width: 240px;
-      flex: 1 1 200px;
+      #adminControls input {
+        width: 100px;
+      }
+
+      #gallery {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+
+      button, input[type="file"] {
+        font-size: 0.95em;
+      }
+
+      #downloadSection {
+        gap: 8px;
+      }
     }
   </style>
 </head>
@@ -251,8 +276,9 @@
     </section>
 
     <section id="downloadSection">
+      <button id="selectAllBtn" style="background:#777;">✔️ Tümünü Seç</button>
       <button id="downloadSelectedBtn">📥 Seçilenleri İndir (ZIP)</button>
-      <button id="deleteSelectedBtn" style="background: #e74c3c; display:none;">🗑️ Seçilenleri Sil</button>
+      <button id="deleteSelectedBtn" style="background:#e74c3c; display:none;">🗑️ Seçilenleri Sil</button>
     </section>
 
     <div id="gallery"></div>
@@ -272,6 +298,7 @@
       const data = localStorage.getItem('user');
       document.getElementById('downloadSection').style.display = 'flex';
       document.getElementById('downloadSelectedBtn').style.display = 'inline-block';
+      document.getElementById('selectAllBtn').style.display = 'inline-block';
 
       if (data) {
         currentUser = JSON.parse(data);
@@ -283,7 +310,6 @@
         } else {
           document.getElementById('deleteSelectedBtn').style.display = 'none';
         }
-
       } else {
         currentUser = null;
         document.getElementById('logoutBtn').style.display = 'none';
@@ -325,6 +351,12 @@
       await fetch('/upload-stream', { method: 'POST', body: formData });
       document.getElementById('formUpload').reset();
       loadGallery();
+    });
+
+    document.getElementById('selectAllBtn').addEventListener('click', () => {
+      document.querySelectorAll('.photo-card').forEach(card => {
+        card.classList.add('selected');
+      });
     });
 
     async function loadGallery() {

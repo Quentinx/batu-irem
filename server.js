@@ -1,3 +1,4 @@
+// server.js
 const express = require('express');
 const fs = require('fs');
 const fsPromises = require('fs/promises');
@@ -8,19 +9,25 @@ const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// File paths
 const USERS_FILE = path.join(__dirname, 'users.json');
 const PHOTOS_FILE = path.join(__dirname, 'photos.json');
 const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
 
-app.use(express.static('public'));
+// Make sure uploads directory exists
+if (!fs.existsSync(UPLOAD_DIR)) {
+  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+  console.log('📂 Created uploads directory');
+}
+
+// Middlewares
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// ===== Multer config =====
+// Multer config
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, UPLOAD_DIR);
-  },
+  destination: (req, file, cb) => cb(null, UPLOAD_DIR),
   filename: (req, file, cb) => {
     const uniqueName = `${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
     cb(null, uniqueName);
@@ -28,17 +35,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ===== Root route =====
-app.get('/', (req, res) => {
-  const indexPath = path.join(__dirname, 'public', 'index.html');
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    res.send('Hoş geldiniz 👋 Uygulama çalışıyor.');
-  }
-});
-
-// ======== Helpers ==========
+// Helper functions
 function readUsers() {
   try {
     return JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8'));
@@ -59,7 +56,12 @@ function savePhotos(photos) {
   fs.writeFileSync(PHOTOS_FILE, JSON.stringify(photos, null, 2));
 }
 
-// ======== Auth (only for Admin) ==========
+// Serve index.html as root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Login endpoint
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   console.log(`📧 Login attempt: ${email}`);
@@ -71,7 +73,6 @@ app.post('/login', async (req, res) => {
   try {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.status(400).send('Şifre yanlış.');
-
     console.log(`✅ Login successful for ${email}`);
     res.json({ email: user.email, role: user.role });
   } catch (error) {
@@ -80,20 +81,17 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// ======== Upload with Multer (Public, No Auth) ==========
+// Public upload route
 app.post('/upload-stream', upload.array('files'), (req, res) => {
-  console.log('✅ Public Upload');
-
   if (!req.files || req.files.length === 0) {
     return res.status(400).send('Dosya yüklenmedi.');
   }
 
   const photos = readPhotos();
-
   req.files.forEach(file => {
     photos.push({
       filename: file.filename,
-      owner: 'anonim',
+      owner: 'Anonim',
       likes: 0
     });
     console.log(`✅ Saved file: ${file.filename}`);
@@ -103,12 +101,12 @@ app.post('/upload-stream', upload.array('files'), (req, res) => {
   res.send(`Upload başarılı. ${req.files.length} dosya yüklendi.`);
 });
 
-// ======== Gallery ==========
+// Gallery
 app.get('/gallery', (req, res) => {
   res.json(readPhotos());
 });
 
-// ======== Like ==========
+// Like photo
 app.post('/like/:filename', (req, res) => {
   const filename = req.params.filename;
   const photos = readPhotos();
@@ -121,7 +119,7 @@ app.post('/like/:filename', (req, res) => {
   res.json({ success: true, likes: photo.likes });
 });
 
-// ======== Delete (Admin) ==========
+// Delete photo (admin only)
 app.delete('/delete/:filename', async (req, res) => {
   const { filename } = req.params;
   const { email, role } = req.query;
@@ -139,14 +137,14 @@ app.delete('/delete/:filename', async (req, res) => {
     await fsPromises.unlink(filePath);
     console.log(`✅ File removed from disk: ${filename}`);
   } catch {
-    console.warn(`⚠️ File already missing: ${filename}`);
+    console.warn(`⚠️ File missing on disk: ${filename}`);
   }
 
   savePhotos(photos.filter(p => p.filename !== filename));
   res.json({ success: true });
 });
 
-// ======== Start Server ==========
+// Start server
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });
